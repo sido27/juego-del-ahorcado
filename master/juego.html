@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Juego de ahorcado</title>
+
+    <style>
+      #div {
+        font-size: 140px;
+
+        text-align: center;
+      }
+      #div2 {
+        font-size: 2em;
+
+        text-align: center;
+      }
+
+      #div3 {
+        text-align: center;
+      }
+      #div4 {
+        text-align: center;
+      }
+
+      button {
+        margin-right: 3px;
+        margin-bottom: 3px;
+        width: 500px;
+        height: 70px;
+        font-size: 1.5em;
+      }
+      #div5 {
+        text-align: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="divForAll">
+      <div id="div"></div>
+      <br />
+      <div id="div2"></div>
+      <div id="div3"></div>
+      <div id="div4"></div>
+      <div id="div5">
+        <button id="reiniciar">REPLAY</button>
+      </div>
+    </div>
+  </body>
+
+  <script src="./diccionario.js"></script>
+
+  <script>
+    let x = 1;
+    let letras = "abcdefghijklmnopqrstuvwxyzñáéíóúü";
+    for (i = 0; i < letras.length; i++) {
+      let btn = document.createElement("button");
+      saltaLinea = document.createElement("br");
+      btn.id = letras[i];
+      btn.style.width = "100px";
+      btn.innerHTML = letras[i];
+      btn.style.backgroundColor = "#4CAF50";
+      document.getElementById("div3").appendChild(btn);
+      if ((i + 1) % 11 == 0) {
+        document.getElementById("div3").appendChild(saltaLinea);
+      }
+    }
+
+    let s = "";
+    for (i = 1; i < diccionario.length - 1; i++) {
+      if (diccionario[i] != '"') s = s + diccionario[i];
+    }
+    let s1 = s.split(",");
+
+    let rand = Math.floor(Math.random() * (s1.length - 1)) + 1;
+    let word = s1[rand];
+
+    // word = word.toUpperCase();
+    console.log(word);
+
+    let dashes;
+    dashes = word.replace(/[^ \d\.\,]/gi, "-");
+
+    document.getElementById("div").innerHTML = dashes;
+    let vidas = 7;
+    function buttonClicked(letter) {
+      //letter = letter.toUpperCase();
+      var noose = document.createElement("img");
+      var noose2 = document.createElement("img");
+      var noose3 = document.createElement("img");
+      var noose4 = document.createElement("img");
+      var noose5 = document.createElement("img");
+      var noose6 = document.createElement("img");
+      var noose7 = document.createElement("img");
+      noose.style.width = "450px";
+
+      noose2.style.width = "450px";
+      noose3.style.width = "450px";
+      noose4.style.width = "450px";
+      noose5.style.width = "450px";
+      noose6.style.width = "450px";
+      noose7.style.width = "450px";
+
+      var nooseTag = document.getElementById("div4");
+      noose.src = "./noose.jpg";
+      noose2.src = "./noose2.jpg";
+      noose3.src = "./noose3.jpg";
+      noose4.src = "./noose4.jpg";
+      noose5.src = "./noose5.jpg";
+      noose6.src = "./noose6.jpg";
+      noose7.src = "./noose7.jpg";
+
+      if (!word.includes(letter)) {
+        vidas--;
+
+        switch (vidas) {
+          case 6:
+            nooseTag.appendChild(noose);
+            break;
+          case 5:
+            nooseTag.innerHTML = "";
+            nooseTag.appendChild(noose2);
+            break;
+          case 4:
+            nooseTag.innerHTML = "";
+            nooseTag.appendChild(noose3);
+            break;
+          case 3:
+            nooseTag.innerHTML = "";
+            nooseTag.appendChild(noose4);
+            break;
+          case 2:
+            nooseTag.innerHTML = "";
+            nooseTag.appendChild(noose5);
+            break;
+          case 1:
+            nooseTag.innerHTML = "";
+            nooseTag.appendChild(noose6);
+            break;
+          case 0:
+            nooseTag.innerHTML = "";
+            nooseTag.appendChild(noose7);
+            break;
+        }
+      }
+
+      document.getElementById(
+        "div2"
+      ).innerHTML = `te has quedado ${vidas} vidas`;
+
+      if (vidas == 0) {
+        document.getElementById("div2").innerHTML =
+          "<span style='color: red;'>GAME OVER</span>";
+        dashes = word;
+        document.querySelectorAll("button").forEach((elem) => {
+          elem.disabled = true;
+        });
+        document.getElementById("reiniciar").style.visibility = "visible";
+        document.getElementById("reiniciar").disabled = false;
+      }
+
+      if (vidas == 1) {
+        document.getElementById(
+          "div2"
+        ).innerHTML = `te has quedado ${vidas} vida`;
+      }
+
+      let i;
+      for (i = 0; i < word.length; i++) {
+        if (word[i] == letter) {
+          dashes = setCharAt(dashes, i, letter);
+        }
+      }
+
+      let divTag = document.getElementById("div");
+
+      divTag.innerHTML = dashes;
+      document.querySelectorAll("button").disabled = true;
+    }
+
+    function setCharAt(str, index, chr) {
+      if (index > str.length - 1) return str;
+      return str.substring(0, index) + chr + str.substring(index + 1);
+    }
+    let btns = document.querySelectorAll("#div3 button");
+
+    for (let i = 0; i < btns.length; i++) {
+      btns[i].addEventListener("click", function () {
+        buttonClicked(btns[i].innerHTML);
+        this.disabled = true;
+      });
+    }
+    let reinicia = document.querySelector("#reiniciar");
+    reinicia.addEventListener("click", function () {
+      window.location.reload();
+    });
+  </script>
+</html>
